@@ -30,12 +30,11 @@ jobs:
         bash_docker_image:
           - "bash:latest"
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Build Fiction Pages
         working-directory: .
         run: |
-          ls ..
-          echo $PATH
-          pwd
           bash fiction.so.sh build
   deploy:
     needs: build
