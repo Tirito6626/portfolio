@@ -28,9 +28,9 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://ficti
         </style>
     </head>
     <body class="w-screen h-dvh text-white bg-black flex-col">
-        <div class="container max-md:text-sm border rounded-xl border-gray-900 max-md:w-screen md:w-200 max-md:mx-1 *:ml-1 m-auto p-1.5">
+        <div class="container max-sm:text-sm border rounded-xl border-gray-900 max-md:w-screen md:w-200 max-md:mx-1 *:ml-1 m-auto p-1.5">
             <pre class="mt-2">tirito@linuxkernelpanic $ webfetch</pre>
-            <div class="grid max-md:grid-cols-1 grid-cols-2 max-md:text-sm max-md:h-full md:h-82">
+            <div class="grid mb-6 max-md:grid-cols-1 grid-cols-2 max-sm:text-sm max-md:h-full md:h-82">
                 <img src="/assets/kcalb.webp" class="max-md:mb-2" />
                 <pre class="md:-ml-16 flex-col *:max-md:inline-flex max-w-screen md:w-128">
                     <pre class="inline-flex">
@@ -53,7 +53,7 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://ficti
                     <Column title="Memory" text="16GiB" />
                 </pre>
             </div>
-            <pre>tirito@linuxkernelpanic $ ls</pre>
+            <pre class="mt-5">tirito@linuxkernelpanic $ ls</pre>
             <pre class="md:inline-flex *:mr-4 mb-2">
                 <a href="https://docs.tirito.de">'All projects'</a>
                 <a href="https://github.com/Tirito6626">GitHub</a>
