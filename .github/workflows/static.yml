@@ -31,6 +31,7 @@ jobs:
           - "bash:latest"
     steps:
       - name: Build Fiction Pages
+        working-directory: .
         run: |
           ls
           bash fiction.so.sh build
