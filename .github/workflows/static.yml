@@ -37,6 +37,7 @@ jobs:
         working-directory: .
         run: |
           bash fiction.so.sh build
+          cd fiction_compiled && mv static.html index.html
       - name: Upload pages artifact
         uses: actions/upload-artifact@v4
         with:
