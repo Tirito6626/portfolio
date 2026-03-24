@@ -33,7 +33,7 @@ jobs:
       - name: Build Fiction Pages
         working-directory: .
         run: |
-          ls
+          ls ..
           echo $PATH
           pwd
           bash fiction.so.sh build
