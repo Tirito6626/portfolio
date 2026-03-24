@@ -1,0 +1,76 @@
+function Column() {
+    @parse "$@"
+    @return html {
+        <div class="inline-flex">
+            <span class="ef247"><span class="bold">$title</span></span>
+            <p>: $text</p>
+        </div>
+    }
+}
+
+function silly() {
+projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://fiction.tirito.de/">Fiction</a>, <a href='https://amber-lang.com'>Amber</a>"
+@return html {
+    <head>
+        <title>silly page</title>
+        <style type="text/css">
+            .ef247 { 
+                color: #9e9e9e; 
+            }
+            a {
+                color: inherit; text-decoration: underline dashed;
+                text-decoration-color: rgba(128,128,128,0.75);
+            }
+            a:hover { 
+                text-decoration-style: solid; 
+                text-decoration-thickness: 1.5px; 
+            }
+        </style>
+    </head>
+    <body class="w-screen h-screen text-white bg-black flex">
+        <div class="container border rounded-xl border-gray-900 w-200 *:ml-1 m-auto p-1.5">
+            <pre class="mt-2">tirito@linuxkernelpanic $ webfetch</pre>
+            <div class="grid grid-cols-2 h-82">
+                <img src="/assets/kcalb.webp" />
+                <pre class="-ml-16 flex-col *:inline-flex w-128">
+                    <pre class="inline-flex">
+                        <pre class="ef247">tirito</pre>
+                        <a>@</a>
+                        <pre class="ef247">linuxkernelpanic</pre>
+                    </pre>
+                    <pre>-----------------------</pre>
+                    <Column title="Discord" text="_tirito_" />
+                    <Column title="Pronouns" text="croissant (he/him)" />
+                    <Column title="Kernel" text="insanity" />
+                    <Column title="Projects" text="$projects" />
+                    <Column title="Roles" text="admin@onSilly, admin@Wispbyte" />
+                    <Column title="Languages" text="bash(x), JS/TS(X), Rust?, Amber" />
+                    <Column title="Host(s)" text="ThinkPad L530, Gigabyte A320M" />
+                    <Column title="OS" text="MacOS 14, Debian GNU/Linux 13" />
+                    <Column title="Resolution" text="1600x900, 1920x1080" />
+                    <Column title="CPU" text="Intel Core i5-3210m, AMD Ryzen 5 2600" />
+                    <Column title="GPU" text="Intel HD 4000, NVIDIA Geforce GTX 1050 Ti" />
+                    <Column title="Memory" text="16GiB" />
+                </pre>
+            </div>
+            <pre>tirito@linuxkernelpanic $ ls</pre>
+            <pre class="inline-flex *:mr-4 mb-2">
+                <a href="https://docs.tirito.de">'All projects'</a>
+                <a href="https://github.com/Tirito6626">GitHub</a>
+                <a href="https://discord.gg/5arB9qAWh4">Wispbyte</a>
+                <a href="https://discord.gg/tvgPu5JnGE">Amber</a>
+                <a href="https://discord.gg/jkCqA5VfMy">onSilly</a>
+            </pre>
+        </div>
+        <footer class="text-gray-800 text-center absolute bottom-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            made with :love: by _tirito_, generated using Fiction at $(LANG=C date), hosted on GitHub Pages
+        </footer>
+    </body>
+    
+}
+
+}
+
+declare -A _hh=([cache-control]="public,max-age=86400" [age]=0)
+fiction.serveFile "$FICTION_PATH/assets/kcalb.webp" "/assets/kcalb.webp" "" "" "_hh"
+fiction.serve "/" silly text/html

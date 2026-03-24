@@ -1,0 +1,24 @@
+{
+    "core": "socat",
+    "address": "0.0.0.0",
+    "port": 8080,
+    "ssl": {
+        "enabled": false,
+        "key": "",
+        "cert": ""
+    },
+    "encode_routes": false,
+    "logs": {
+        "show_addr": true,
+        "show_ua": false,
+        "show_headers": false
+    },
+    "hot_reload": {
+        "enabled": true,
+        "files": ["pages/*"],
+        "interval": 2
+    },
+    "plugins": [
+        "tailwindcss"
+    ]
+}
