@@ -1,11 +1,12 @@
 function Column() {
     @parse "$@"
     @return html {
-        <div class="inline-flex max-w-screen text-wrap">
+        <div class="$class inline-flex max-w-screen text-wrap">
             <span class="ef247"><span class="bold">$title</span></span>
             <p>: $text</p>
         </div>
     }
+    unset class
 }
 
 function silly() {
@@ -38,7 +39,7 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://ficti
                         <a>@</a>
                         <pre class="ef247">linuxkernelpanic</pre>
                     </pre>
-                    <pre>-----------------------</pre>
+                    <pre class="-mt-2 -mb-7">-----------------------</pre>
                     <Column title="Discord" text="_tirito_" />
                     <Column title="Pronouns" text="croissant (he/him)" />
                     <Column title="Kernel" text="insanity" />
