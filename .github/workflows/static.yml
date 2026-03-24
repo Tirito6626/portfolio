@@ -32,8 +32,8 @@ jobs:
     steps:
       - name: Build Fiction Pages
         run: |
-        ls
-        bash fiction.so.sh build
+          ls
+          bash fiction.so.sh build
   deploy:
     needs: build
     environment:
