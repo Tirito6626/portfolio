@@ -44,12 +44,12 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://ficti
                     <Column title="Pronouns" text="croissant (he/him)" />
                     <Column title="Kernel" text="insanity" />
                     <Column title="Projects" text="$projects" />
-                    <Column title="Roles" text="admin@onSilly, dev@Amber" />
+                    <Column title="Roles" text="dev@Fiction, dev@Amber" />
                     <Column title="Languages" text="bash(x), JS/TS(X), Rust?, Amber" />
                     <Column title="Host(s)" text="ThinkPad L530, Gigabyte A320M" />
-                    <Column title="OS" text="MacOS 14, Debian GNU/Linux 13" />
+                    <Column title="OS" text="Debian GNU/Linux 13" />
                     <Column title="Resolution" text="1600x900, 1920x1080" />
-                    <Column title="CPU" text="Intel Core i5-3210m, AMD Ryzen 5 2600" />
+                    <Column title="CPU" text="Intel Core i5-3210M, AMD Ryzen 5 2600" />
                     <Column title="GPU" text="Intel HD 4000, NVIDIA Geforce GTX 1050 Ti" />
                     <Column title="Memory" text="16GiB" />
                 </pre>
@@ -59,7 +59,6 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://ficti
                 <a href="https://docs.tirito.de">'All projects'</a>
                 <a href="https://github.com/Tirito6626">GitHub</a>
                 <a href="https://discord.gg/tvgPu5JnGE">Amber</a>
-                <a href="https://discord.gg/jkCqA5VfMy">onSilly</a>
             </pre>
         </div>
         <footer class="text-gray-800 mt-4 md:absolute max-md:mx-3 bottom-2 text-center left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2">
