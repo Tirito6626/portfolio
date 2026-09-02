@@ -1,6 +1,6 @@
 #!/bin/bash
 # bashx compiler
-# (C) Tirito6626 2025 
+# (C) Tirito6626 2025-2026
 [[ ! -v _red ]] && { 
 _green="$(tput setaf 2)"
 _red="$(tput setaf 1)"
@@ -51,11 +51,29 @@ function @error() {
   echo "${_red}Error:${_nc} ${@}" >&2
 }
 
+function _open_heredoc() {
+	if (( ! heredoc_open )); then 
+		output+=$'cat <<- __eof\n'
+		(( heredoc_open ^= 1 ))
+		(( level == 0 )) && level="${saved_level:=2}"
+	fi
+}
+
+function _close_heredoc() {
+	if (( heredoc_open )); then 
+		output+=$'__eof\n'
+		(( heredoc_open ^= 1 ))
+		saved_level="$level"
+		level=0
+	fi
+}
+
 function _render() {
 	#set -x
-	local dom=false level=0 slevel=0 inscript=false output='' i=0 tag=''
-	local -a parent=() level=()
-
+	local dom=false level=2 slevel=0 inscript=false output='' i=0 tag='' indent=''
+	local -a parent=() elements=()
+	#output+=$'cat <<- __eof\n'
+	#heredoc_open=1
 	while read -r line; do
   		line="${line%% }"
 		line="${line## }"
@@ -70,49 +88,52 @@ function _render() {
   		fi
 
 		[[ "$line" == '' || "${line::1}" == '#' ]] && continue # skip empty lines or comments
-  		[[ "$line" =~ @render= ]] && @render_type "${line##@render=}" && continue
-
-  		if [[ "${line::1}" == "<" ]]; then
+  		#[[ "$line" =~ @render= ]] && @render_type "${line##@render=}" && continue
+		case "$line" in
+  		"<"*)
 			# splits <html>string</html> into
 			# <html>
 			# string
 			# </html>
 			# and parses each part separately
-    		while read -r line; do
+			readarray -t elements < <(sed 's|\([a-zA-Z0-9|"|\@|\/]\)>|\1>\n|g; s|\(</[^>]*>\)|\n\1|g' <<< "$line")
+    		for line in "${elements[@]}"; do
 		      	[[ "$nextline" ]] && local buf="$line" && line="$nextline" && nextline="$buf"
       			[[ "$line" == '' || "${line::1}" == '#' ]] && continue
 
-		      	if grep -qE '^[[:space:]]*</?([A-Z][a-zA-Z0-9]*)\b' <<< "${line## }"; then # regex if it's a custom element or native html
+				# regex if it's a custom element or native html
+		      	if grep -qE '^[[:space:]]*</?([A-Z][a-zA-Z0-9]*)\b' <<< "${line## }"; then 
         			[[ "$line" =~ /\>.* ]] && nextline=$(sed 's|^.*/>\(.*\)|\1|' <<< "$line") && line="${line//$nextline}" 
         			line="${line%%\/\>}"
 			        line="${line%%\>}"
-        			line="${line##\<}"
-			        output+="$line"$'\n' # only keep the function and it's arguments
+        			line="${line##\<}" # only keep the function and it's arguments
+			        _close_heredoc
+					output+="$line"$'\n'
 			    else
         			read tag attr <<< "$line"
         			# any lines related to execute() and x-bash-client are made for bash-wasm module which isn't working for now
-        			
 					case "$tag" in
 						*'<script'*)
 							slevel=0
+							_close_heredoc
 							case "$attr" in
 								*'bash-client'*)
             						[[ "$type" =~ silent || ! -v bash_wasm_path ]] && inscript=bash-client-silent || inscript=bash-client
-            						output+=$'cat <<- "_EOF_"\n'
+            						output+=$'__eof\ncat <<- "_EOF_"\n'
             						[[ ! -v bash_wasm_path ]] && output+="<script>addServerAction(\`" || output+="<script>execute(\`"
 									;;
 								*'bash'*)	
 								# match "<script type=text/x-bash>" blocks
             						if [[ $__render_type == client ]]; then
               							inscript=bash-client
-              							output+=$'cat <<- "EOF"\n<script>execute(`'
-            						else  
+              							output+=$'__eof\ncat <<- "EOF"\n<script>execute(`'
+            						else 
               							inscript=bash 
             						fi
 									;;
 								*)
             						inscript=js
-            						output+=$'cat <<- "_EOF_"\n'
+            						output+=$'__eof\ncat <<- "_EOF_"\n'
             						output+="$line"$'\n'
           					esac
 							;;
@@ -122,27 +143,42 @@ function _render() {
             					js)	output+=$'</script>\n_EOF_\n'	;;
             					bash-client-silent)	output+=$'`)</script>\n_EOF_\n'	;;
             					bash-client)
-              						local uid=$(cat /proc/sys/kernel/random/uuid)
+              						read uid </proc/sys/kernel/random/uuid
               						output+="\`,'$uid')</script><div id='$uid'></div>"
               						unset uid
               						output+=$'\n_EOF_\n'
          		 			esac
+							_open_heredoc
           					inscript=false
 							;;
 						'<body'*|'<main'*|'<div'*)
+							((level+=2))
+							_open_heredoc
 							[[ "$inscript" != false ]] && ((++slevel)) #&& echo "i $slevel $tag $line" && set -x
-							output+="printf '%s\n' '${line}'"$'\n'
+							output+="${line}"$'\n'
           					;;
-						'</head>')	
-							[[ -v ismeta ]] && unset ismeta 
-							;;
-         				*'</'*)
-							((--slevel)) #&& echo "d $slevel $tag"
-							output+="printf '%s\n' '${line}'"$'\n'
-          					;;
-	          			'<head')
+						'<head'*)
+							((level+=2))
     	        			local ismeta=true
+							_close_heredoc
+							output+=$'fiction.addMeta <<- __eof\n'
+							heredoc_open=1
         	  				;;
+						'</head>')
+							((level-=2))
+							output+=$'__eof\n'
+							heredoc_open=0
+							[[ -v ismeta ]] && unset ismeta
+							;;
+         				'</'*)
+							_open_heredoc
+							((level-=2))
+							((--slevel)) #&& echo "d $slevel $tag"
+							output+="${line}"$'\n'
+          					;;
+						'<'*'/>')
+							output+="$line"$'\n'
+							;;
 						*)
         				# check if there are special callbacks
           				case "$line" in
@@ -164,23 +200,24 @@ function _render() {
             	    						*)  attr+="$key=\"$value\" "
 	              						esac
     	       						done <<< "$args"
-        	    					output+="printf '%s' \"<$el $attr $events>'\""$'\n'
+        	    					output+="<$el $attr $events>"$'\n'
             						unset el args key events arg
           						fi
 								;;
           					*)
 								[[ "$inscript" != false && "${line::1}" == '<' ]] && ((++slevel)) #&& echo "i $slevel $tag" && set -x
-          						[[ "$ismeta" ]] && output+="fiction.addMeta \"${line//\"/\\\"}\""$'\n' || output+="printf '%s' \"${line//\"/\\\"}\""$'\n' # automatically add stuff to <head>
+								output+="$line"
+								((level+=2))
           				esac
 	        		esac
         			unset tag _
 					#output+="printf '%s' \"${line//\"/\\\"}\""$'\n'
       			fi 
-    		done < <(sed 's|\([a-zA-Z0-9|"|\@|\/]\)>|\1>\n|g; s|\(</[^>]*>\)|\n\1|g' <<< "$line")
+    		done
   		# add line without any wrapping in case it's bash/inside js block
-  		elif [[ "$line" =~ '{@children}'|'{cache}'|'{/cache}'|'@return' || "$inscript" != false ]]; then 
-    		[[ $slevel > 0 ]] && output+="printf '%s' \"${line//\"/\\\"}\""$'\n' || output+="$line"$'\n'
-  		elif [[ "${line::2}" =~ '$(' ]]; then # capture subshell execution
+  		;;
+		# capture subshell execution
+		'$('*) 
     		if [[ "${line: -1}" != ')' ]]; then
       			readchunk=true
       			line="${line//\$(/\$($'\n'  }"
@@ -198,18 +235,34 @@ function _render() {
 			        output+="\`,'$uid')</script><div id='$uid'></div>" # extra div to redirect output from bash-client block
         			output+=$'\n_EOF_\n'
 			        unset uid
-			    else 
+			    else
         			line="${line//&&/&$'\n'}"
 			        _conditionalRender <<<"${line//||/$'\n'||$'\n'}"
       			fi
     		fi
-  		elif [[ "${line}" == ')' && "$chunk" ]]; then # append chunk in case subshell is multi-line
-      		_conditionalRender <<<"${chunk//||/$'\n'||$'\n'})"
-  		else 
-    		[[ "$line" =~ '{' && "$line" =~ '}' ]] && line=$(echo "$line" | sed 's|{\([^[:space:]]\+\)}|<a data-bind="\1"></a>|g') # "dynamic" variables manageable by setState
-    		output+="printf '%s' \"${line//\"/\\\"}\""$'\n'
-  		fi 
+			;;
+		# append chunk in case subshell is multi-line
+  		')') 
+      		if [[ "$chunk" ]]; then 
+				_conditionalRender <<<"${chunk//||/$'\n'||$'\n'})"
+			else
+				output+="${line}"
+			fi
+			;;
+		'{'*'}')
+			output+="$(sed 's|{\([^[:space:]]\+\)}|<a data-bind="\1"></a>|g' <<< "$line")" # "dynamic" variables manageable by setState
+			;;
+  		*) 
+    		if [[ "$inscript" != false ]]; then
+				_close_heredoc
+				output+="${line}"
+				_open_heredoc
+			else
+				output+="${line}"$'\n'
+			fi
+  		esac 
 	done
+	_close_heredoc
 	render_output="$output"
 	unset input output level flevel i inscript parent line nextline
 } 
@@ -230,19 +283,20 @@ bashx() {
 	local out1="${input//$'\n'/#NEWLIN#}"
 	out1="${out1//\\n/#NL#}"
 	# split @return blocks with $'\r' for further parsing per block
-	local out2=$(awk 'function count(s, c) { n=0; for (i=1; i<=length(s); i++) if (substr(s, i, 1) == c) n++; return n } /^[[:space:]]*@return[[:space:]](html|json)[[:space:]]*{[[:space:]]*$/ { in_block=1; depth=1; print; next } in_block { o=count($0,"{"); c=count($0,"}"); depth+=o-c; print; if (depth==0) { in_block=0; print "\r" } }' <<< "$input")
+	local out2=$(awk 'function count(s, c) { n=0; for (i=1; i<=length(s); i++) if (substr(s, i, 1) == c) n++; return n } /^[[:space:]]*(@return|@respond)[[:space:]](html|json|[0-9]+|[A-z]+)[[:space:]]*{[[:space:]]*$/ { in_block=1; depth=1; print; next } in_block { o=count($0,"{"); c=count($0,"}"); depth+=o-c; print; if (depth==0) { in_block=0; print "\r" } }' <<< "$input")
 	#echo "$out2" 
 	#return
 	while read -rd $'\r' block; do
   		#echo "${block}"
 		#return
   		block1="$block"
+
   		if [[ "${block:8:4}" == 'html' ]]; then
     		block1="${block1%%\}}"
     		_render "" <<< "${block1/@return html \{}"
-    		local newblock="{"$'\n'"${render_output}"$'\n'"}"
+    		local newblock=$'{\n'"${render_output}"$'\n}'
 			newblock="${newblock//\&/\\\&}"
-  		elif [[ "${block:8:4}" == 'html' ]]; then 
+  		elif [[ "${block:8:4}" == 'json' ]]; then 
   			# remove semicolon, newlines and escape double quotes
     		local newblock="${block/@return json}"
     		newblock="${newblock//\};/\}}"
@@ -252,6 +306,16 @@ echo "${newblock//\"/\\\"}"
 eof
 )
     		newblock="${newblock//  }"
+		elif [[ "${block::8}" == "@respond" ]]; then
+			status="${block:9:3}"
+			if ! [ "$status" -eq "$status" ] 2>/dev/null; then
+				_error "($1) Invalid status code: $status"$'\n'"$block"
+				return 1
+			fi
+			block1="${block1%%\}}"
+    		_render "" <<< "${block1/@respond $status \{}"
+    		local newblock="FictionResponseHeaders['content-type']='text/html' FictionResponse['status']='$status'"$'\n{\n'"${render_output}"$'\n} > "$WORKER_OUT"; __fiction_responded=1'
+			newblock="${newblock//\&/\\\&}"
   		fi
   		newblock="${newblock##$'\n'}"
   		block="${block//$'\n'/#NEWLIN#}"
@@ -285,10 +349,8 @@ function @parse {
   for arg in "$@"; do
 	local _key _value
     IFS='=' read _key _value <<< "${arg}"; 
-    if [[ -z "$_key" ]]; then 
-      continue
-    fi 
     case "$_key" in
+	  '') continue ;;
       js-on:*)
         _key="${_key//js-on:}"
         _value="${_value##\'}"
@@ -304,8 +366,7 @@ function @parse {
       on*)
         _events+="${_key,,}=\"$_value\" "
       ;;
-      *) 
-        [[ "$BASH_BROWSER" ]] && export $_key="$value" || printf -v "$_key" "%s" "$_value"
+      *) printf -v "$_key" "%s" "$_value"
       esac
   done
 }

@@ -10,8 +10,8 @@ function Column() {
 }
 
 function silly() {
-projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://fiction.tirito.de/">Fiction</a>, <a href='https://amber-lang.com'>Amber</a>"
-@return html {
+projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href='https://fiction.tirito.de/'>Fiction</a>, <a href='https://amber-lang.com'>Amber</a>"
+@respond 200 {
     <head>
         <title>silly page</title>
         <style type="text/css">
@@ -50,7 +50,8 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://ficti
                     <Column title="OS" text="Fedora 44 (GNOME, KDE)" />
                     <Column title="Resolution" text="1600x900, 2880x1800" />
                     <Column title="CPU" text="Intel Core i5-3210M, Core i7-4870HQ" />
-                    <Column title="GPU" text="Intel HD 4000, NVIDIA Geforce GT 750M" />
+                    <Column title="GPU" text="Intel HD 4000" />
+                    <Column title="GPU" text="NVIDIA Geforce GT 750M" />
                     <Column title="Memory" text="16GiB" />
                 </pre>
             </div>
@@ -68,11 +69,8 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href="https://ficti
     </body>
     
 }
-
 }
+
 fiction.serve "/" silly text/html
 declare -A _hh=([cache-control]="public,max-age=86400" [age]=0)
 fiction.serveFile "$FICTION_PATH/assets/kcalb.webp" "/assets/kcalb.webp" "" "" "_hh"
-
-
-
