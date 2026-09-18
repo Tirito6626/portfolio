@@ -77,7 +77,5 @@ projects="<a href='https://github.com/Tirito6626/bash2json'>bash2json</a>, <a hr
 }
 
 fiction.serve "/" silly text/html
-fiction.serve "/p" silly text/html
 fiction.serveFile "$FICTION_PATH/assets/kcalb.webp" "/assets/kcalb.webp"
-fiction.serveFile "$FICTION_PATH/images/kcalb.webp" "/images/kcalb.webp"
 fiction.serveFile "$FICTION_PATH/assets/discord-embed.json" "/assets/discord-embed.json"
