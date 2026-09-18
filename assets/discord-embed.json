@@ -9,8 +9,8 @@
                 "accessory": {
                     "type": 11,
                     "media": {
-                        "url": "https://tirito.de/images/kcalb.webp",
-                        "proxy_url": "https://tirito.de/images/kcalb.webp"
+                        "url": "https://tirito.de/assets/kcalb.webp",
+                        "proxy_url": "https://tirito.de/assets/kcalb.webp"
                     },
                     "description": null,
                     "spoiler": false
