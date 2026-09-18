@@ -13,7 +13,8 @@ function silly() {
 projects="<a href='https://github.com/Tirito6626/bash2json'>bash2json</a>, <a href='https://github.com/FictionWeb/framework/'>Fiction</a>, <a href='https://amber-lang.com'>Amber</a>"
 @respond 200 {
     <head>
-        <script id="discord:component-embed" src="/assets/discord-embed.json" type="application/json">
+        <script id="discord:component-embed" type="application/json">
+            $(cat "$FICTION_PATH/assets/discord-embed.json")
         </script>
         <title>silly page</title>
         <style type="text/css">
@@ -42,6 +43,7 @@ projects="<a href='https://github.com/Tirito6626/bash2json'>bash2json</a>, <a hr
                         <pre class="ef247">linuxkernelpanic</pre>
                     </pre>
                     <pre class="-mt-2 -mb-7">-----------------------</pre>
+                    <div class="grid grid-cols-1 mt-6">
                     <Column title="Discord" text="_tirito_" />
                     <Column title="Pronouns" text="croissant (he/him)" />
                     <Column title="Kernel" text="insanity" />
@@ -55,6 +57,7 @@ projects="<a href='https://github.com/Tirito6626/bash2json'>bash2json</a>, <a hr
                     <Column title="GPU" text="Intel HD 4000" />
                     <Column title="GPU" text="NVIDIA Geforce GT 750M" />
                     <Column title="Memory" text="16GiB" />
+                    </div>
                 </pre>
             </div>
             <pre class="mt-5">tirito@linuxkernelpanic $ ls</pre>
