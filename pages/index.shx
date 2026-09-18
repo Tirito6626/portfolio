@@ -10,9 +10,10 @@ function Column() {
 }
 
 function silly() {
-projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href='https://fiction.tirito.de/'>Fiction</a>, <a href='https://amber-lang.com'>Amber</a>"
+projects="<a href='https://github.com/Tirito6626/bash2json'>bash2json</a>, <a href='https://github.com/FictionWeb/framework/'>Fiction</a>, <a href='https://amber-lang.com'>Amber</a>"
 @respond 200 {
     <head>
+        <script id="discord:component-embed" src="/assets/discord-embed.json" type="application/json"></script>
         <title>silly page</title>
         <style type="text/css">
             .ef247 { 
@@ -72,5 +73,5 @@ projects="<a href='https://docs.tirito.de'>bash2json</a>, <a href='https://ficti
 }
 
 fiction.serve "/" silly text/html
-declare -A _hh=([cache-control]="public,max-age=86400" [age]=0)
-fiction.serveFile "$FICTION_PATH/assets/kcalb.webp" "/assets/kcalb.webp" "" "" "_hh"
+fiction.serveFile "$FICTION_PATH/assets/kcalb.webp" "/assets/kcalb.webp"
+fiction.serveFile "$FICTION_PATH/assets/discord-embed.json" "/assets/discord-embed.json"
