@@ -13,7 +13,8 @@ function silly() {
 projects="<a href='https://github.com/Tirito6626/bash2json'>bash2json</a>, <a href='https://github.com/FictionWeb/framework/'>Fiction</a>, <a href='https://amber-lang.com'>Amber</a>"
 @respond 200 {
     <head>
-        <script id="discord:component-embed" src="/assets/discord-embed.json" type="application/json"></script>
+        <script id="discord:component-embed" src="/assets/discord-embed.json" type="application/json">
+        </script>
         <title>silly page</title>
         <style type="text/css">
             .ef247 { 
