@@ -18,18 +18,9 @@
                 "components": [
                     {
                         "type": 10,
-                        "content": "grand _tirito_'s portfolio"
+                        "content": "## grand _tirito_'s portfolio"
                     }
                 ]
-            },
-            {
-                "type": 14,
-                "divider": true,
-                "spacing": 1
-            },
-            {
-                "type": 10,
-                "content": "projects:"
             },
             {
                 "type": 1,
