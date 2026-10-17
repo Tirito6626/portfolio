@@ -36,7 +36,7 @@ projects="<a href='https://github.com/Tirito6626/bash2json'>bash2json</a>, <a hr
             <pre class="mt-2">tirito@linuxkernelpanic $ webfetch</pre>
             <div class="grid mb-6 grid-cols-2 max-sm:text-sm max-md:h-full md:h-82">
                 <img src="/assets/kcalb.webp" class="max-md:mb-2 max-md:hidden" />
-                <pre class="md:-ml-16 flex-col max-w-screen md:w-128">
+                <pre class="md:-ml-16 flex-col w-screen md:w-128">
                     <pre class="inline-flex">
                         <pre class="ef247">tirito</pre>
                         <a>@</a>
