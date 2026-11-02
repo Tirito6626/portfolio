@@ -81,3 +81,4 @@ fiction.serve "/p" silly text/html
 fiction.serveFile "$FICTION_PATH/assets/kcalb.webp" "/assets/kcalb.webp"
 fiction.serveFile "$FICTION_PATH/images/kcalb.webp" "/images/kcalb.webp"
 fiction.serveFile "$FICTION_PATH/assets/discord-embed.json" "/assets/discord-embed.json"
+fiction.serveFile "$FICTION_PATH/assets/train.html" "/train-ai"
